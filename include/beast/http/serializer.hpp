@@ -65,7 +65,7 @@ struct empty_decorator
     if the contents of the message indicate that chunk encoding
     is required. If the semantics of the message indicate that
     the connection should be closed after the message is sent, the
-    function @ref needs_close will return `true`.
+    function @ref need_close will return `true`.
 
     Upon construction, an optional chunk decorator may be
     specified. This decorator is a function object called with
@@ -268,7 +268,7 @@ public:
         function returns `true`.
     */
     bool
-    needs_close() const
+    need_close() const
     {
         return close_;
     }

@@ -320,7 +320,7 @@ consume(std::size_t n)
             break;
         // VFALCO delete b_?
         header_done_ = true;
-        if(! is_deferred::value)
+        if(! split_)
             goto go_complete;
         s_ = do_body;
         break;
@@ -364,7 +364,7 @@ consume(std::size_t n)
             break;
         // VFALCO delete b_?
         header_done_ = true;
-        if(! is_deferred::value)
+        if(! split_)
         {
             s_ = do_final_c;
             break;
