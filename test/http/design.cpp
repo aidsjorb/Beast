@@ -277,12 +277,24 @@ public:
     void
     doCgiResponse()
     {
+        std::string const s = "Hello, world!";
+        test::pipe child{ios_};
+        child.server.read_size(3);
+        ostream(child.server.buffer) << s;
+        child.client.close();
+        test::pipe p{ios_};
+        error_code ec;
+        do_cgi_response(child.server, p.client, ec);
+        BEAST_EXPECTS(! ec, ec.message());
+        BEAST_EXPECT(equal_body<false>(p.server.str(), s));
+#if 0
         error_code ec;
         std::string const body = "Hello, world!\n";
         test::string_ostream so{get_io_service(), 3};
         test::string_istream si{get_io_service(), body, 6};
         do_cgi_response(si, so, ec);
         BEAST_EXPECT(equal_body<false>(so.str, body));
+#endif
     }
 
     //--------------------------------------------------------------------------

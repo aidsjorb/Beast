@@ -5,37 +5,7 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[section:adv_http Advanced HTTP]
-
-[block '''
-<informaltable frame="all"><tgroup cols="1"><colspec colname="a"/><tbody><row><entry valign="top"><simplelist>
-  <member><link linkend="beast.adv_http.serialize">Serialization</link></member>
-  <member><link linkend="beast.adv_http.parsing">Parsing</link></member>
-  <member><link linkend="beast.adv_http.fields">Field Containers</link></member>
-  <member><link linkend="beast.adv_http.body">Body Types</link></member>
-</simplelist></entry></row></tbody></tgroup></informaltable>
-''']
-
-The basic interfaces for reading and writing complete messages are
-simple to use and convenient, but may not serve the needs of advanced
-use cases, including:
-
-* Parsing a message from caller-provided buffers
-
-* Serializing a message to caller-provided buffers
-
-* Reading a message from a stream incrementally
-
-* Writing a message to a stream incrementally
-
-In some cases, users may wish to provide their own implementation for
-the fields container and the body type. In the advanced sections we
-discuss the buffer oriented message algorithms, incremental stream
-algorithms, and customization points for messages.
-
-
-
-[section:serialize Serialization (Advanced HTTP)]
+[section:serializer Buffer-Oriented Serialization]
 
 Beast uses the __serializer__ class internally to generate a sequence of
 buffers corresponding to the serialized representation of a __message__.
@@ -125,56 +95,6 @@ void print(message<isRequest, Body, Fields> const& m)
         std::cout << std::endl;
     else
         std::cerr << ec.message() << std::endl;
-}
-```
-
-[heading Stream Operations]
-
-When working with streams, the use of an explicitly declared serializer
-allows control over the amount of network activity performed in each
-system call. This allows for better application level flow control and
-predictable timeouts. These advanced stream write operations work on
-an object of type __serializer__ which has already been constructed,
-and which must remain valid until the operation is complete:
-
-[table Advanced Streaming
-[[Name][Description]]
-[[
-    [link beast.ref.http__write_some.overload1 [*write_some]]
-][
-    Send __serializer__ buffer data to a __SyncWriteStream__.
-]]
-[[
-    [link beast.ref.http__write_header.overload1 [*write_header]]
-][
-    Send an entire header from a __serializer__ to a __SyncWriteStream__.
-]]
-[[
-    [link beast.ref.http__async_write_some [*async_write_some]]
-][
-    Send some __serializer__ buffer data to an __AsyncWriteStream__.
-]]
-[[
-    [link beast.ref.http__async_write_header [*async_write_header]]
-][
-    Send an entire header from a __serializer__ to a __AsyncWriteStream__.
-]]
-]
-
-Here is an example which synchronously sends a message on a stream using
-a serializer:
-```
-template<class SyncWriteStream, bool isRequest, class Body, class Fields>
-void send(SyncWriteStream& stream, message<isRequest, Body, Fields> const& m)
-{
-    static_assert(is_sync_write_stream<SyncWriteStream>::value,
-        "SyncWriteStream requirements not met");
-    serializer<isRequest, Body, Fields> sr{m};
-    do
-    {
-        write_some(stream, sr);
-    }
-    while(! sr.is_done());
 }
 ```
 
@@ -284,66 +204,5 @@ struct decorator
     }
 };
 ```
-
-[endsect]
-
-
-
-[section:parsing Parsing (Advanced HTTP)]
-
-[endsect]
-
-
-
-[section:fields Field Containers (Advanced HTTP)]
-
-[endsect]
-
-
-
-[section:body Body Types (Advanced HTTP)]
-
-User-defined types are possible for the message body, where the type meets the
-[link beast.ref.Body [*`Body`]] requirements. This simplified class declaration
-shows the customization points available to user-defined body types:
-
-[$images/body.png [width 525px] [height 190px]]
-
-The meanin of the nested types is as follows
-
-[table Body Type Members
-[[Name][Description]]
-[
-    [`value_type`]
-    [
-        Determines the type of the
-        [link beast.ref.http__message.body `message::body`] member. If this
-        type defines default construction, move, copy, or swap, then message objects
-        declared with this [*Body] will have those operations defined.
-    ]
-][
-    [`body_writer`]
-    [
-        An optional nested type meeting the requirements of
-        [link beast.ref.BodyWriter [*BodyWriter]]. If present, this defines the
-        algorithm used to transfer parsed octets into buffers representing the
-        body.
-    ]
-][
-    [`body_reader`]
-    [
-        An optional nested type meeting the requirements of
-        [link beast.ref.BodyReader [*BodyReader]]. If present, this defines
-        the algorithm used to obtain buffers representing a body of this type.
-    ]
-]
-]
-
-The examples included with this library provide a [*Body] implementation that
-serializing message bodies that come from a file.
-
-[endsect]
-
-
 
 [endsect]

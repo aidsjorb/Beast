@@ -114,23 +114,24 @@ struct is_body_reader<T, beast::detail::void_t<
 template<class T>
 struct is_body_writer : std::integral_constant<bool, ...> {};
 #else
-template<class T, class = beast::detail::void_t<>>
+template<class T, class = void>
 struct is_body_writer : std::false_type {};
 
 template<class T>
 struct is_body_writer<T, beast::detail::void_t<decltype(
-    std::declval<T::writer>().init(
+    std::declval<typename T::writer&>().init(
         std::declval<boost::optional<std::uint64_t>>(),
         std::declval<error_code&>()),
-    std::declval<T::writer>().put(
+    std::declval<typename T::writer&>().put(
         std::declval<boost::asio::const_buffers_1>(),
         std::declval<error_code&>()),
-    std::declval<T::writer>().finish(
-        std::declval<error_code&>())
-            )> > : std::integral_constant<bool,
-    std::is_constructible<typename T::writer,
-        message<true, T, detail::fields_model>&>::value
-            >
+    std::declval<typename T::writer&>().finish(
+        std::declval<error_code&>()),
+    (void)0)>> : std::integral_constant<bool,
+        true
+        && std::is_constructible<typename T::writer,
+            message<true, T, detail::fields_model>&>::value
+        >
 {
 };
 #endif
