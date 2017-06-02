@@ -86,7 +86,8 @@ public:
         // Insert or replace the Expect field
         req.fields.replace("Expect", "100-continue");
 
-        serializer<true, Body, Fields> sr{req};
+        // Create the serializer
+        auto sr = make_serializer(req);
 
         // Send just the header
         write_header(stream, sr);
@@ -287,14 +288,6 @@ public:
         do_cgi_response(child.server, p.client, ec);
         BEAST_EXPECTS(! ec, ec.message());
         BEAST_EXPECT(equal_body<false>(p.server.str(), s));
-#if 0
-        error_code ec;
-        std::string const body = "Hello, world!\n";
-        test::string_ostream so{get_io_service(), 3};
-        test::string_istream si{get_io_service(), body, 6};
-        do_cgi_response(si, so, ec);
-        BEAST_EXPECT(equal_body<false>(so.str, body));
-#endif
     }
 
     //--------------------------------------------------------------------------

@@ -79,8 +79,9 @@ The stream operations which work on serializers are:
 ]]
 ]
 
-Here is an example which synchronously sends a message on a stream using
-a serializer:
+Here is an example of using a serializer to send a message on a stream
+synchronously. This performs the same operation as calling `write(stream, m)`:
+
 ```
 template<class SyncWriteStream, bool isRequest, class Body, class Fields>
 void send(SyncWriteStream& stream, message<isRequest, Body, Fields> const& m)
@@ -140,7 +141,8 @@ void do_expect_100_continue(
     // Insert or replace the Expect field
     req.fields.replace("Expect", "100-continue");
 
-    serializer<true, Body, Fields> sr{req};
+    // Create the serializer
+    auto sr = make_serializer(req);
 
     // Send just the header
     write_header(stream, sr);
