@@ -5,7 +5,7 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[section:body Custom Body Types]
+[section:custom_body Custom Body Types]
 
 User-defined types are possible for the message body, where the type meets the
 [link beast.ref.Body [*`Body`]] requirements. This simplified class declaration

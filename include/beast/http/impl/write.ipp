@@ -479,7 +479,8 @@ class write_lambda
     Stream& stream_;
 
 public:
-    boost::optional<std::size_t> bytes_transferred;
+    bool invoked = false;
+    std::size_t bytes_transferred = 0;
 
     explicit
     write_lambda(Stream& stream)
@@ -492,6 +493,7 @@ public:
     operator()(error_code& ec,
         ConstBufferSequence const& buffer)
     {
+        invoked = true;
         bytes_transferred = boost::asio::write(
             stream_, buffer, ec);
     }
@@ -614,8 +616,8 @@ write_header(SyncWriteStream& stream, serializer<
         sr.get(ec, f);
         if(ec)
             return;
-        BOOST_ASSERT(f.bytes_transferred);
-        sr.consume(*f.bytes_transferred);
+        BOOST_ASSERT(f.invoked);
+        sr.consume(f.bytes_transferred);
     }
 }
 
@@ -681,8 +683,8 @@ write(SyncWriteStream& stream, serializer<
         sr.get(ec, f);
         if(ec)
             return;
-        if(f.bytes_transferred)
-            sr.consume(*f.bytes_transferred);
+        if(f.invoked)
+            sr.consume(f.bytes_transferred);
     }
     if(sr.need_close())
         ec = error::end_of_stream;

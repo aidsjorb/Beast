@@ -5,28 +5,20 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[section:serializer Buffer-Oriented Serialization]
+[section:serializer_buffers Buffer-Oriented Serializing]
 
-Beast uses the __serializer__ class internally to generate a sequence of
-buffers corresponding to the serialized representation of a __message__.
-The basic algorithms send the entire set of buffers at once while the
-incremental algorithms allow the caller to write a bounded amount to
-the stream at each iteration. In between calls to generate buffers or
-write buffers to the stream, the internal state of the serialization
-must be saved. A __serializer__ initializes this internal state and
-stores it in between calls to produce buffers, until all the message
-buffers have been produced. Afterwards, the state object may be destroyed.
+In extreme cases, users may wish to create an instance of __serializer__
+and invoke its methods directly instead of using the provided stream
+algorithms. This could be useful for implementing algorithms on streams
+whose asynchronous interface does not conform to __AsyncStream__. For
+example, a
+[@https://github.com/libuv/libuv *libuv* socket].
 
-The serializer is a class template constructed from an existing
-message. The template types used to instantiate the serializer must
-match the types in the message. Here we declare a request and construct
-an accompanying serializer:
-```
-request<string_body> req;
-serializer<true, string_body, fields> sr{req};
-```
+The serializer interface is interactive; the caller invokes it repeatedly to
+produce buffers until all of the buffers have been generated. Then the
+serializer is destroyed.
 
-The buffers are produced by first calling
+After the serializer is created, the buffers are produced by first calling
 [link beast.ref.http__serializer.get `serializer::get`]
 to obtain a buffer sequence, and then calling
 [link beast.ref.http__serializer.consume `serializer::consume`]

@@ -5,7 +5,7 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[section:sr_streams Serializer Stream Operations]
+[section:serializer_streams Serializer Stream Operations]
 
 Algorithms for sending and receiving entire messages on streams are intended
 for light duty use-cases such as simple clients and low utilization servers.

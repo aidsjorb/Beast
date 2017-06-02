@@ -11,10 +11,13 @@
 <informaltable frame="all"><tgroup cols="1"><colspec colname="a"/><tbody><row><entry valign="top"><simplelist>
   <member><link linkend="beast.http.primer">HTTP Primer</link></member>
   <member><link linkend="beast.http.message">Message Containers</link></member>
-  <member><link linkend="beast.http.msg_streams">Message Stream Operations</link></member>
-  <member><link linkend="beast.http.sr_streams">Serializer Stream Operations</link></member>
-  <member><link linkend="beast.http.serializer">Buffer-Oriented Serialization</link></member>
-  <member><link linkend="beast.http.body">Custom Body Types</link></member>
+  <member><link linkend="beast.http.streams">Message Stream Operations</link></member>
+  <member><link linkend="beast.http.serializer_streams">Serializer Stream Operations</link></member>
+  <member><link linkend="beast.http.parser_streams">Parser Stream Operations</link></member>
+  <member><link linkend="beast.http.serializer_buffers">Buffer-Oriented Serializing</link></member>
+  <member><link linkend="beast.http.parser_buffers">Buffer-Oriented Parsing</link></member>
+  <member><link linkend="beast.http.custom_parsers">Custom Parsers</link></member>
+  <member><link linkend="beast.http.custom_body">Custom Body Types</link></member>
 </simplelist></entry></row></tbody></tgroup></informaltable>
 ''']
 
@@ -85,9 +88,12 @@ format using __Asio__. Specifically, the library provides:
 
 [include 3_1_primer.qbk]
 [include 3_2_message.qbk]
-[include 3_3_msg_streams.qbk]
-[include 3_4_sr_streams.qbk]
-[include 3_5_serializer.qbk]
-[include 3_6_body.qbk]
+[include 3_3_streams.qbk]
+[include 3_4_serializer_streams.qbk]
+[include 3_5_parser_streams.qbk]
+[include 3_6_serializer_buffers.qbk]
+[include 3_7_parser_buffers.qbk]
+[include 3_8_custom_parsers.qbk]
+[include 3_9_custom_body.qbk]
 
 [endsect]
